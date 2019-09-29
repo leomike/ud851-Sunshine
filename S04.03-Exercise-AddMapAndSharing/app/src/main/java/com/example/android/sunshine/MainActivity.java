@@ -39,9 +39,6 @@ import com.example.android.sunshine.utilities.OpenWeatherJsonUtils;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity implements ForecastAdapterOnClickHandler {
-
-    private static final String TAG = MainActivity.class.getSimpleName();
-
     private RecyclerView mRecyclerView;
     private ForecastAdapter mForecastAdapter;
 
@@ -211,6 +208,20 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapterOn
         return true;
     }
 
+    private void openLocationInMap() {
+        String address = "1600 Pennsylvania Ave, Washington, DC, USA";
+
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("geo").appendPath("0,0").appendQueryParameter("q", address);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(builder.build());
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -219,9 +230,10 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapterOn
             mForecastAdapter.setWeatherData(null);
             loadWeatherData();
             return true;
+        } else if (id == R.id.action_map) {
+            openLocationInMap();
+            return true;
         }
-
-        // TODO (2) Launch the map when the map menu item is clicked
 
         return super.onOptionsItemSelected(item);
     }
